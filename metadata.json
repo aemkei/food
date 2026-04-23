@@ -1,0 +1,6 @@
+{
+  "name": "Abendessen Decider",
+  "description": "Zufällige Essensvorschläge für die Woche basierend auf einer Spreadsheet-Liste.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
