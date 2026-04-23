@@ -14,7 +14,7 @@ export default function App() {
     setLoading(true);
     const meals = await fetchMeals();
     setAllMeals(meals);
-    setSelectedMeals(getRandomMeals(meals, 5));
+    setSelectedMeals(getRandomMeals(meals, 10));
     setLoading(false);
   }, []);
 
@@ -25,7 +25,7 @@ export default function App() {
   const handleRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
-      setSelectedMeals(getRandomMeals(allMeals, 5));
+      setSelectedMeals(getRandomMeals(allMeals, 10));
       setRefreshing(false);
     }, 400);
   };
@@ -65,21 +65,16 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-200 lg:p-12 flex items-center justify-center p-0 selection:bg-black selection:text-white">
-      {/* Brutalist Container */}
-      <div className="bg-white w-full max-w-6xl min-h-[600px] grid lg:grid-cols-2 grid-cols-1 border-[12px] border-black shadow-[24px_24px_0_0_rgba(0,0,0,1)] relative overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col selection:bg-black selection:text-white">
+      {/* Container without box */}
+      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 grid-cols-1 relative">
         
         {/* Left Pane - Brand/Header */}
-        <div className="bg-brand p-4 lg:p-6 border-b-12 lg:border-b-0 lg:border-r-12 border-black flex flex-col justify-center text-black relative overflow-hidden">
+        <div className="bg-brand p-8 lg:p-12 lg:min-h-screen flex flex-col justify-center text-black relative">
           <div>
             <h1 className="text-[18vw] lg:text-[160px] font-black leading-[0.75] uppercase tracking-[-0.08em]">
               ESSEN
             </h1>
-          </div>
-          
-          {/* Subtle watermark background */}
-          <div className="absolute -bottom-10 -left-10 opacity-5 pointer-events-none select-none">
-             <ChefHat size={300} strokeWidth={3} />
           </div>
         </div>
 
@@ -109,23 +104,16 @@ export default function App() {
           </div>
 
           {/* Action Bar */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-6 items-center justify-center border-t-12 border-black -mx-6 lg:-mx-12 p-8 lg:p-12 bg-gray-50">
+          <div className="mt-8 flex flex-col sm:flex-row gap-6 items-center justify-center border-t-4 border-black p-8 lg:p-12 bg-gray-50">
             <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="w-full sm:w-auto bg-black text-white px-10 py-5 text-xl font-black uppercase tracking-tight active:translate-y-1 transition-all disabled:opacity-50 hover:bg-brand hover:text-black cursor-pointer shadow-[8px_8px_0_0_rgba(255,92,0,1)]"
+              className="w-full sm:w-auto bg-black text-white px-10 py-5 text-xl font-black uppercase tracking-tight active:translate-y-1 transition-all disabled:opacity-50 hover:bg-brand hover:text-black cursor-pointer"
               id="refresh-button"
             >
               Neu Mischen
             </button>
           </div>
-        </div>
-      </div>
-      
-      {/* PWA Floating Badge for Mobile Only */}
-      <div className="lg:hidden fixed top-6 right-6">
-        <div className="bg-black text-white p-2 border-4 border-white shadow-lg">
-           <ChefHat size={20} />
         </div>
       </div>
     </div>
