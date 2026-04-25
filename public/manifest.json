@@ -2,7 +2,7 @@
   "name": "Food",
   "short_name": "Food",
   "description": "Was essen wir heute?",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#FFFFFF",
