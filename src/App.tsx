@@ -97,10 +97,8 @@ export default function App() {
       isLocked: true
     };
     
-    // Remove the item at the current position
-    selected.splice(index, 1);
-    // Add it to the front
-    selected.unshift(newMeal);
+    // Replace in place
+    selected[index] = newMeal;
     
     setSelectedMeals(selected);
   };

@@ -109,7 +109,7 @@ export function MealCard({
           </div>
           
           {filteredMeals.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 shadow-xl z-50 rounded-2xl flex flex-col gap-1 overflow-hidden p-1">
+            <div className="absolute top-full left-4 right-4 mt-2 bg-white border border-gray-100 shadow-2xl z-[70] rounded-2xl flex flex-col gap-1 overflow-hidden p-1">
               {filteredMeals.map((m) => (
                 <button
                   key={m.id}
@@ -118,7 +118,7 @@ export function MealCard({
                     setIsSearching(false);
                     setSearchQuery('');
                   }}
-                  className="text-left px-4 py-3 rounded-xl hover:bg-brand/5 text-gray-700 font-medium active:bg-brand/10 transition-colors"
+                  className="text-left px-4 py-3 rounded-xl hover:bg-brand/5 text-gray-700 font-medium active:bg-brand/10 transition-colors pointer-events-auto"
                 >
                   {m.name}
                 </button>
