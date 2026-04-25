@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Reorder, useMotionValue, AnimatePresence } from 'motion/react';
+import { Reorder, useMotionValue, AnimatePresence, motion } from 'motion/react';
 import { Meal } from '../services/mealService';
 import { GripVertical, Lock, Unlock, Search, X, Shuffle } from 'lucide-react';
 
@@ -80,7 +80,7 @@ export function MealCard({
       className={`flex flex-col group transition-colors relative ${meal.isLocked ? 'bg-brand/5' : 'bg-white hover:bg-gray-50'}`}
     >
       {isSearching ? (
-        <div className="flex flex-col px-6 py-4 bg-white border-b border-gray-100 shadow-sm z-10 transition-all">
+        <div className="flex flex-col px-3 py-4 bg-white border-b border-gray-100 shadow-sm z-10">
           <div className="flex items-center gap-3">
             <Search size={18} className="text-gray-400" />
             <input
@@ -108,28 +108,26 @@ export function MealCard({
             </button>
           </div>
           
-          <AnimatePresence>
-            {filteredMeals.length > 0 && (
-              <div className="mt-4 flex flex-col gap-1 overflow-hidden">
-                {filteredMeals.map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => {
-                      onSelectMeal?.(m);
-                      setIsSearching(false);
-                      setSearchQuery('');
-                    }}
-                    className="text-left px-4 py-3 rounded-xl hover:bg-brand/5 text-gray-700 font-medium active:bg-brand/10 transition-colors"
-                  >
-                    {m.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </AnimatePresence>
+          {filteredMeals.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 shadow-xl z-50 rounded-2xl flex flex-col gap-1 overflow-hidden p-1">
+              {filteredMeals.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => {
+                    onSelectMeal?.(m);
+                    setIsSearching(false);
+                    setSearchQuery('');
+                  }}
+                  className="text-left px-4 py-3 rounded-xl hover:bg-brand/5 text-gray-700 font-medium active:bg-brand/10 transition-colors"
+                >
+                  {m.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
-        <div className="flex items-center gap-4 px-6 py-3">
+        <div className="flex items-center gap-4 px-3 py-3">
           <div className="flex-shrink-0 flex items-center gap-2">
             <GripVertical className="text-gray-300 cursor-grab active:cursor-grabbing" size={20} />
             <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold transition-colors ${meal.isLocked ? 'bg-brand border-brand text-white' : 'bg-gray-50 border-gray-200 text-gray-400'}`}>

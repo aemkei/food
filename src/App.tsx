@@ -112,18 +112,17 @@ export default function App() {
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
         >
-          <RefreshCw size={64} strokeWidth={3} />
+          <RefreshCw size={40} strokeWidth={3} />
         </motion.div>
-        <h1 className="mt-8 text-4xl font-black uppercase tracking-tighter">LÄDT...</h1>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col selection:bg-brand selection:text-white">
+    <div className="min-h-screen bg-white flex flex-col relative selection:bg-brand selection:text-white">
       {/* Main Content */}
-      <main className="w-full flex-1 flex flex-col">
-        <div className="flex-1 bg-white overflow-hidden mb-20">
+      <main className="w-full flex-1 flex flex-col pb-32">
+        <div className="flex-1 bg-white overflow-hidden">
           <Reorder.Group 
             axis="y" 
             values={selectedMeals} 
@@ -150,25 +149,25 @@ export default function App() {
           </Reorder.Group>
         </div>
 
-        {/* Floating Action Bar */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-50">
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="group flex items-center gap-3 bg-brand text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-brand-dark active:scale-95 transition-all disabled:opacity-50"
-          >
-            <Shuffle className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
-            <span>Neu mischen</span>
-          </button>
-          
+        {/* Absolute Action Bar */}
+        <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center gap-4 z-50 pointer-events-none">
           <a 
             href="https://docs.google.com/spreadsheets/d/1ZPDo-WF5w-dCcSW6lZdveUeorxOynAv5IPUfkuPaioY/edit?gid=0#gid=0" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-brand text-[10px] font-bold uppercase tracking-wider bg-white/80 backdrop-blur px-3 py-1 rounded-full border border-gray-100 shadow-sm transition-colors"
+            className="text-gray-400 hover:text-brand text-[10px] font-bold uppercase tracking-wider bg-white/80 backdrop-blur px-3 py-1 rounded-full border border-gray-100 shadow-sm transition-colors pointer-events-auto"
           >
             Originale Liste
           </a>
+
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="group flex items-center gap-3 bg-brand text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-brand-dark active:scale-95 transition-all disabled:opacity-50 pointer-events-auto"
+          >
+            <Shuffle className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+            <span>Neu mischen</span>
+          </button>
         </div>
       </main>
     </div>
