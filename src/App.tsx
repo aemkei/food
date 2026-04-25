@@ -118,6 +118,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col relative selection:bg-brand selection:text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-5 py-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-gray-900">Food</h1>
+      </header>
+
       {/* Main Content */}
       <main className="w-full flex-1 flex flex-col pb-32">
         <div className="flex-1 bg-white overflow-hidden">
