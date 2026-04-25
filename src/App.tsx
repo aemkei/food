@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence, Reorder } from 'motion/react';
-import { RefreshCw, ShoppingCart, ChefHat, Info } from 'lucide-react';
+import { Shuffle, RefreshCw, ShoppingCart, Info } from 'lucide-react';
 import { fetchMeals, getRandomMeals, Meal } from './services/mealService';
 import { MealCard } from './components/MealCard';
 
@@ -86,14 +86,23 @@ export default function App() {
   };
 
   const handleManualSelect = (index: number, chosenMeal: Meal) => {
-    const newSelected = [...selectedMeals];
-    newSelected[index] = {
+    const selected = [...selectedMeals];
+    const targetSlotId = selected[index].slotId;
+    
+    // Create new instance of the meal with a new instanceId to trigger animation
+    const newMeal = {
       ...chosenMeal,
-      instanceId: `${chosenMeal.id}-${Date.now()}`,
-      slotId: selectedMeals[index].slotId,
+      instanceId: `${chosenMeal.id}-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      slotId: targetSlotId,
       isLocked: true
     };
-    setSelectedMeals(newSelected);
+    
+    // Remove the item at the current position
+    selected.splice(index, 1);
+    // Add it to the front
+    selected.unshift(newMeal);
+    
+    setSelectedMeals(selected);
   };
 
   if (loading) {
@@ -111,20 +120,10 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa] flex flex-col items-center selection:bg-brand selection:text-white pb-20">
-      {/* Header */}
-      <header className="w-full max-w-2xl px-6 py-12 flex flex-col items-center text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
-          Abendessen
-        </h1>
-        <p className="text-gray-500 font-medium tracking-tight">
-          Zehn zufällige Vorschläge für heute.
-        </p>
-      </header>
-
+    <div className="min-h-screen bg-white flex flex-col selection:bg-brand selection:text-white">
       {/* Main Content */}
-      <main className="w-full max-w-2xl px-6">
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden mb-8">
+      <main className="w-full flex-1 flex flex-col">
+        <div className="flex-1 bg-white overflow-hidden mb-20">
           <Reorder.Group 
             axis="y" 
             values={selectedMeals} 
@@ -151,29 +150,24 @@ export default function App() {
           </Reorder.Group>
         </div>
 
-        {/* Action Button */}
-        <div className="flex justify-center">
+        {/* Floating Action Bar */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-50">
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="group relative flex items-center gap-2 bg-brand text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-brand/30 hover:shadow-brand/40 active:scale-95 transition-all disabled:opacity-50 cursor-pointer overflow-hidden"
-            id="refresh-button"
+            className="group flex items-center gap-3 bg-brand text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-brand-dark active:scale-95 transition-all disabled:opacity-50"
           >
-            <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
-            <span>Alle neu mischen</span>
+            <Shuffle className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+            <span>Neu mischen</span>
           </button>
-        </div>
-
-        {/* Spreadsheet Link */}
-        <div className="mt-12 text-center pb-8">
+          
           <a 
             href="https://docs.google.com/spreadsheets/d/1ZPDo-WF5w-dCcSW6lZdveUeorxOynAv5IPUfkuPaioY/edit?gid=0#gid=0" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-brand text-xs font-semibold uppercase tracking-wider transition-colors inline-flex items-center gap-2"
+            className="text-gray-400 hover:text-brand text-[10px] font-bold uppercase tracking-wider bg-white/80 backdrop-blur px-3 py-1 rounded-full border border-gray-100 shadow-sm transition-colors"
           >
-            <span>Originale Liste öffnen</span>
-            <Info size={14} />
+            Originale Liste
           </a>
         </div>
       </main>
