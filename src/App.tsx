@@ -148,24 +148,26 @@ export default function App() {
         </div>
 
         {/* Absolute Action Bar */}
-        <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center gap-4 z-50 pointer-events-none">
-          <a 
-            href="https://docs.google.com/spreadsheets/d/1ZPDo-WF5w-dCcSW6lZdveUeorxOynAv5IPUfkuPaioY/edit?gid=0#gid=0" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-brand text-[10px] font-bold uppercase tracking-wider bg-white/80 backdrop-blur px-3 py-1 rounded-full border border-gray-100 shadow-sm transition-colors pointer-events-auto"
-          >
-            Originale Liste
-          </a>
+        <div className="absolute bottom-8 left-0 right-0 px-4 flex items-center z-50 pointer-events-none">
+          <div className="flex items-center gap-2 pointer-events-auto">
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="group flex items-center gap-2 bg-brand text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-xl hover:bg-brand-dark active:scale-95 transition-all disabled:opacity-50 whitespace-nowrap"
+            >
+              <Shuffle className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <span>Neu mischen</span>
+            </button>
+            <a 
+              href="https://docs.google.com/spreadsheets/d/1ZPDo-WF5w-dCcSW6lZdveUeorxOynAv5IPUfkuPaioY/edit?gid=0#gid=0" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-brand text-[11px] font-bold uppercase tracking-wider hover:underline transition-color px-2 py-2 flex items-center justify-center whitespace-nowrap"
+            >
+              Originale Liste
+            </a>
 
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="group flex items-center gap-3 bg-brand text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-brand-dark active:scale-95 transition-all disabled:opacity-50 pointer-events-auto"
-          >
-            <Shuffle className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
-            <span>Neu mischen</span>
-          </button>
+          </div>
         </div>
       </main>
     </div>

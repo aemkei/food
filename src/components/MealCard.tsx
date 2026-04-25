@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Reorder, useMotionValue, AnimatePresence, motion } from 'motion/react';
 import { Meal } from '../services/mealService';
-import { GripVertical, Lock, Unlock, Search, X, Shuffle } from 'lucide-react';
+import { GripVertical, Check, Search, X, Shuffle } from 'lucide-react';
 
 function TypewriterText({ text, instanceId }: { text: string; instanceId?: string }) {
   const [displayedText, setDisplayedText] = useState(text);
@@ -55,7 +55,6 @@ export function MealCard({
   onClick?: () => void;
   onToggleLock?: () => void;
 }) {
-  const number = (index + 1).toString().padStart(2, '0');
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -79,60 +78,85 @@ export function MealCard({
       id={meal.slotId!}
       className={`flex flex-col group transition-colors relative ${meal.isLocked ? 'bg-brand/5' : 'bg-white hover:bg-gray-50'}`}
     >
-      {isSearching ? (
-        <div className="flex flex-col px-3 py-4 bg-white border-b border-gray-100 shadow-sm z-10">
-          <div className="flex items-center gap-3">
-            <Search size={18} className="text-gray-400" />
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Suchen..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  setIsSearching(false);
-                  setSearchQuery('');
-                }
-              }}
-              className="flex-1 bg-transparent border-none outline-none text-lg font-medium text-gray-800 placeholder:text-gray-300"
-            />
-            <button 
-              onClick={() => {
-                setIsSearching(false);
-                setSearchQuery('');
-              }}
-              className="p-2 text-gray-400 rounded-full hover:bg-gray-50"
-            >
-              <X size={20} />
-            </button>
-          </div>
-          
-          {filteredMeals.length > 0 && (
-            <div className="absolute top-full left-4 right-4 mt-2 bg-white border border-gray-100 shadow-2xl z-[70] rounded-2xl flex flex-col gap-1 overflow-hidden p-1">
-              {filteredMeals.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => {
-                    onSelectMeal?.(m);
+      <AnimatePresence>
+        {isSearching && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="fixed inset-0 bg-white z-[100] flex flex-col pt-4 px-4 overflow-hidden"
+          >
+            <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+              <Search size={22} className="text-gray-400" />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Gericht suchen..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
                     setIsSearching(false);
                     setSearchQuery('');
-                  }}
-                  className="text-left px-4 py-3 rounded-xl hover:bg-brand/5 text-gray-700 font-medium active:bg-brand/10 transition-colors pointer-events-auto"
-                >
-                  {m.name}
-                </button>
-              ))}
+                  }
+                }}
+                className="flex-1 bg-transparent border-none outline-none text-xl font-medium text-gray-800 placeholder:text-gray-300"
+              />
+              <button 
+                onClick={() => {
+                  setIsSearching(false);
+                  setSearchQuery('');
+                }}
+                className="p-3 text-gray-400 bg-gray-50 rounded-full hover:bg-gray-100"
+              >
+                <X size={24} />
+              </button>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="flex items-center gap-4 px-3 py-3">
+            
+            <div className="flex-1 overflow-y-auto pb-20">
+              {filteredMeals.length > 0 ? (
+                <div className="flex flex-col divide-y divide-gray-100">
+                  {filteredMeals.map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => {
+                        onSelectMeal?.(m);
+                        setIsSearching(false);
+                        setSearchQuery('');
+                      }}
+                      className="text-left px-5 py-4 hover:bg-brand/5 text-gray-700 font-medium text-lg active:bg-brand/10 transition-colors"
+                    >
+                      {m.name}
+                    </button>
+                  ))}
+                </div>
+              ) : searchQuery.trim() !== '' ? (
+                <div className="text-center py-20 text-gray-400 font-medium">
+                  Keine Gerichte gefunden für "{searchQuery}"
+                </div>
+              ) : (
+                <div className="text-center py-20 text-gray-400 font-medium italic">
+                  Fang an zu tippen, um die Liste zu durchsuchen...
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex items-center gap-4 px-3 py-3">
           <div className="flex-shrink-0 flex items-center gap-2">
             <GripVertical className="text-gray-300 cursor-grab active:cursor-grabbing" size={20} />
-            <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold transition-colors ${meal.isLocked ? 'bg-brand border-brand text-white' : 'bg-gray-50 border-gray-200 text-gray-400'}`}>
-              {number}
-            </div>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleLock?.();
+              }}
+              className={`p-1.5 rounded-lg transition-all ${meal.isLocked ? 'text-brand bg-brand/10' : 'text-gray-300 hover:text-gray-400 hover:bg-gray-100'}`}
+              aria-label={meal.isLocked ? "Entsperren" : "Sperren"}
+            >
+              <Check size={20} strokeWidth={meal.isLocked ? 3 : 2} />
+            </button>
           </div>
           
           <div 
@@ -163,19 +187,8 @@ export function MealCard({
                 </button>
               </>
             )}
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleLock?.();
-              }}
-              className={`p-3 rounded-xl transition-all ${meal.isLocked ? 'text-brand bg-brand/10' : 'text-gray-400 bg-gray-50 active:bg-gray-100'}`}
-              aria-label={meal.isLocked ? "Entsperren" : "Sperren"}
-            >
-              {meal.isLocked ? <Lock size={20} /> : <Unlock size={20} />}
-            </button>
           </div>
         </div>
-      )}
     </Reorder.Item>
   );
 }
