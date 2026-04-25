@@ -116,6 +116,8 @@ export default function App() {
     );
   }
 
+  const selectedIds = selectedMeals.map(m => m.id);
+
   return (
     <div className="min-h-screen bg-white flex flex-col relative selection:bg-brand selection:text-white">
       {/* Header */}
@@ -139,6 +141,7 @@ export default function App() {
                   meal={meal} 
                   index={index} 
                   allMeals={allMeals}
+                  excludeIds={selectedIds}
                   onSelectMeal={(m) => handleManualSelect(index, m)}
                   onClick={() => handleRefreshSingle(index)}
                   onToggleLock={() => handleToggleLock(index)}

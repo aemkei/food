@@ -45,12 +45,14 @@ export function MealCard({
   onClick,
   onToggleLock,
   allMeals = [],
+  excludeIds = [],
   onSelectMeal
 }: { 
   meal: Meal; 
   index: number; 
   key?: string | number;
   allMeals?: Meal[];
+  excludeIds?: string[];
   onSelectMeal?: (m: Meal) => void;
   onClick?: () => void;
   onToggleLock?: () => void;
@@ -59,12 +61,12 @@ export function MealCard({
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const filteredMeals = searchQuery.trim() === '' 
-    ? [] 
-    : allMeals.filter(m => 
-        m.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
-        m.id !== meal.id
-      ).slice(0, 5);
+  const filteredMeals = allMeals.filter(m => {
+    const matchesSearch = searchQuery.trim() === '' || 
+      m.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const isNotAlreadySelected = !excludeIds.includes(m.id) || m.id === meal.id;
+    return matchesSearch && isNotAlreadySelected;
+  });
 
   useEffect(() => {
     if (isSearching && inputRef.current) {
@@ -76,6 +78,7 @@ export function MealCard({
     <Reorder.Item
       value={meal}
       id={meal.slotId!}
+      dragListener={!isSearching}
       className={`flex flex-col group transition-colors relative ${meal.isLocked ? 'bg-brand/5' : 'bg-white hover:bg-gray-50'}`}
     >
       <AnimatePresence>
@@ -85,6 +88,10 @@ export function MealCard({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             className="fixed inset-0 bg-white z-[100] flex flex-col pt-4 px-4 overflow-hidden"
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
               <Search size={22} className="text-gray-400" />
