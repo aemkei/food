@@ -1,6 +1,9 @@
 export interface Meal {
   id: string;
   name: string;
+  instanceId?: string;
+  isLocked?: boolean;
+  slotId?: string;
 }
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdrKhNWPbVMbRLZNnxjYofW9XgH4SEGM221Cte5mDEOqHddg1eZZ9yhf1mGEkiBZaAuLd3MonMubRM/pub?output=csv';
